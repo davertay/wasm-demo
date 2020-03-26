@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+  <head>
+    <meta charset="utf-8">
+    <title>Wasm Example</title>
+    
+    <script type="text/javascript">
+    // Webpack is setup to publish as commonjs-module which expects there to
+    // be a global "module" and it assigns all the exports to "module.exports" 
+    // Create the empty module here, then load the bundle:
+    var module = {}
+    </script>
+
+    <script src="/dist/bundle.js"></script>
+
+    <script type="text/javascript">
+
+      // The exports are found on "module":
+      wasmExports = module.exports
+  
+      let api = null
+      let config = {
+        debug: true
+      }
+      wasmExports.Demo(config).then((thing) => {
+        api = thing
+      })
+
+      function test_add_func(a, b) {
+        let result = api.add(a, b);
+        document.getElementById('result_out').innerHTML = result;
+      }
+
+      function test_str_double(str) {
+        let result = api.string_double(str);
+        document.getElementById('result_out').innerHTML = result;
+      }
+
+      function test_rot13(str) {
+        let result = api.rot13(str);
+        document.getElementById('result_out').innerHTML = result;
+      }
+
+  </script>
+  </head>
+
+  <body>
+    <div>
+      Number 1: <input id="num1" value="3" /><br />
+      Number 2: <input id="num2" value="4" /><br />
+
+      <button onclick="test_add_func(
+        document.getElementById('num1').value,
+        document.getElementById('num2').value
+        )">Add</button><br />
+
+      String: <input id="str" value="Hello World" /><br />
+
+      <button onclick="test_rot13(
+        document.getElementById('str').value
+      )">Rot13</button><br />
+
+      <button onclick="test_str_double(
+        document.getElementById('str').value
+      )">String Double</button><br />
+
+</div>
+    Result: <div id="result_out"></div>
+  </body>
+</html>
+
